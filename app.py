@@ -8,6 +8,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+api = Api(app)
+movie_ns = api.namespace('movies')
+genre_ns = api.namespace('genres')
+
 
 class Movie(db.Model):
     __tablename__ = 'movie'
