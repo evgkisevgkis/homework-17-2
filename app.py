@@ -50,14 +50,14 @@ class MovieSchema(Schema):
     director_id = fields.Int()
 
 
-movie_schema = MovieSchema(many=True)
+movie_schema = MovieSchema()
 
 
 @movie_ns.route('/')
 class MovieView(Resource):
     def get(self):
         all_movies = Movie.query.all()
-        return movie_schema.dump(all_movies), 200
+        return movie_schema.dump(all_movies, many=True), 200
 
 
 if __name__ == '__main__':
