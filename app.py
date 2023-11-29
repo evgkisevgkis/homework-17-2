@@ -39,6 +39,20 @@ class Genre(db.Model):
     name = db.Column(db.String(255))
 
 
+class MovieSchema(Schema):
+    id = fields.Int(dump_only=True)
+    title = fields.Str
+    description = fields.Str
+    trailer = fields.Str
+    year = fields.Int
+    rating = fields.Float
+    genre_id = fields.Int
+    director_id = fields.Int
+
+
+movie_schema = MovieSchema()
+
+
 @app.route('/')
 def hello_world():  # put application's code here
     return 'Hello World!'
