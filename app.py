@@ -56,7 +56,16 @@ movie_schema = MovieSchema()
 @movie_ns.route('/')
 class MovieView(Resource):
     def get(self):
-        all_movies = Movie.query.all()
+        pre = Movie.query
+        director_id = request.args.get('director_id')
+        genre_id = request.args.get('genre_id')
+        if director_id:
+            pre = pre.filter(Movie.director_id == director_id)
+        if genre_id:
+            pre = pre.filter(Movie.genre_id == genre_id)
+        all_movies = pre.all()
+        if not all_movies:
+            return 'Извините, по вашему запросу ничего не найдено', 404
         return movie_schema.dump(all_movies, many=True), 200
 
 
@@ -66,7 +75,7 @@ class OneMovieView(Resource):
         one_movie = Movie.query.get(mid)
         if not one_movie:
             return 'Извините, фильм с таким ID не найден.', 404
-        return movie_schema.dump(one_movie)
+        return movie_schema.dump(one_movie), 200
 
 
 if __name__ == '__main__':
