@@ -60,5 +60,14 @@ class MovieView(Resource):
         return movie_schema.dump(all_movies, many=True), 200
 
 
+@movie_ns.route('/<int:mid>')
+class OneMovieView(Resource):
+    def get(self, mid: int):
+        one_movie = Movie.query.get(mid)
+        if not one_movie:
+            return 'Извините, фильм с таким ID не найден.', 404
+        return movie_schema.dump(one_movie)
+
+
 if __name__ == '__main__':
     app.run()
