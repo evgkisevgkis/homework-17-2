@@ -106,6 +106,14 @@ class OneMovieView(Resource):
         except Exception as e:
             return e, 400
 
+    def delete(self, mid: int):
+        movie = Movie.query.get(mid)
+        if not movie:
+            return 'Извините, фильм с таким ID не найден.', 404
+        db.session.delete(movie)
+        db.session.commit()
+        return 'Фильм успешно удалён', 204
+
 
 if __name__ == '__main__':
     app.run()
