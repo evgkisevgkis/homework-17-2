@@ -145,5 +145,35 @@ class DirectorsView(Resource):
             return e, 400
 
 
+@director_ns.route('/<int:did>')
+class DirectorView(Resource):
+    def get(self, did: int):
+        one_director = Director.query.get(did)
+        if not one_director:
+            return 'Извините, режиссер с таким ID не найден.', 404
+        return director_schema.dump(one_director), 200
+
+    def put(self, did: int):
+        director = Director.query.get(did)
+        if not director:
+            return 'Извините, режиссер с таким ID не найден.', 404
+        try:
+            director_data = request.json
+            director.name = director_data.get('name')
+            db.session.add(director)
+            db.session.commit()
+            return 'Режиссер обновлён', 200
+        except Exception as e:
+            return e, 400
+
+    def delete(self, did: int):
+        director = Director.query.get(did)
+        if not director:
+            return 'Извините, режиссер с таким ID не найден.', 404
+        db.session.delete(director)
+        db.session.commit()
+        return 'Режиссер успешно удалён', 204
+
+
 if __name__ == '__main__':
     app.run()
