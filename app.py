@@ -11,6 +11,7 @@ db = SQLAlchemy(app)
 api = Api(app)
 movie_ns = api.namespace('movies')
 genre_ns = api.namespace('genres')
+director_ns = api.namespace('directors')
 
 
 class Movie(db.Model):
