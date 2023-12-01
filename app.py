@@ -175,5 +175,22 @@ class DirectorView(Resource):
         return 'Режиссер успешно удалён', 204
 
 
+@genre_ns.route('/')
+class GenresView(Resource):
+    def get(self):
+        genres = Genre.query.all()
+        return genre_schema.dump(genres, many=True), 200
+
+    def post(self):
+        try:
+            genre_data = request.json
+            new_genre = Genre(**genre_data)
+            with db.session.begin():
+                db.session.add(new_genre)
+            return 'Жанр добавлен в базу данных', 201
+        except Exception as e:
+            return e, 400
+
+
 if __name__ == '__main__':
     app.run()
