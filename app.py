@@ -51,8 +51,13 @@ class MovieSchema(Schema):
     director_id = fields.Int()
 
 
-movie_schema = MovieSchema()
+class DirectorSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str()
 
+
+movie_schema = MovieSchema()
+director_schema = DirectorSchema()
 
 @movie_ns.route('/')
 class MovieView(Resource):
