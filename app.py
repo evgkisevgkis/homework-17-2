@@ -87,6 +87,25 @@ class OneMovieView(Resource):
             return 'Извините, фильм с таким ID не найден.', 404
         return movie_schema.dump(one_movie), 200
 
+    def put(self, mid: int):
+        movie = Movie.query.get(mid)
+        if not movie:
+            return 'Извините, фильм с таким ID не найден.', 404
+        try:
+            movie_data = request.json
+            movie.title = movie_data.get('title')
+            movie.description = movie_data.get('description')
+            movie.trailer = movie_data.get('trailer')
+            movie.year = movie_data.get('year')
+            movie.rating = movie_data.get('rating')
+            movie.genre_id = movie_data.get('genre_id')
+            movie.director_id = movie_data.get('director_id')
+            db.session.add(movie)
+            db.session.commit()
+            return 'Фильм обновлён', 200
+        except Exception as e:
+            return e, 400
+
 
 if __name__ == '__main__':
     app.run()
