@@ -128,5 +128,22 @@ class OneMovieView(Resource):
         return 'Фильм успешно удалён', 204
 
 
+@director_ns.route('/')
+class DirectorsView(Resource):
+    def get(self):
+        directors = Director.query.all()
+        return director_schema.dump(directors, many=True), 200
+
+    def post(self):
+        try:
+            director_data = request.json
+            new_director = Director(**director_data)
+            with db.session.begin():
+                db.session.add(new_director)
+            return 'Режиссер добавлен в базу данных', 201
+        except Exception as e:
+            return e, 400
+
+
 if __name__ == '__main__':
     app.run()
