@@ -192,5 +192,36 @@ class GenresView(Resource):
             return e, 400
 
 
+@genre_ns.route('/<int:gid>')
+class GenreView(Resource):
+    def get(self, gid: int):
+        genre = Genre.query.get(gid)
+        if not genre:
+            return 'Извините, жанр с таким ID не найден.', 404
+        movies = Movie.query.filter(Movie.genre_id == gid)
+        return movie_schema.dump(movies, many=True), 200
+
+    def put(self, gid: int):
+        genre = Genre.query.get(gid)
+        if not genre:
+            return 'Извините, жанр с таким ID не найден.', 404
+        try:
+            genre_data = request.json
+            genre.name = genre_data.get('name')
+            db.session.add(genre)
+            db.session.commit()
+            return 'Жанр обновлён', 200
+        except Exception as e:
+            return e, 400
+
+    def delete(self, gid: int):
+        genre = Director.query.get(gid)
+        if not genre:
+            return 'Извините, жанр с таким ID не найден.', 404
+        db.session.delete(genre)
+        db.session.commit()
+        return 'Жанр успешно удалён', 204
+
+
 if __name__ == '__main__':
     app.run()
