@@ -68,6 +68,16 @@ class MovieView(Resource):
             return 'Извините, по вашему запросу ничего не найдено', 404
         return movie_schema.dump(all_movies, many=True), 200
 
+    def post(self):
+        try:
+            movie_data = request.json
+            new_movie = Movie(**movie_data)
+            with db.session.begin():
+                db.session.add(new_movie)
+            return 'Фильм добавлен в базу данных', 201
+        except Exception as e:
+            return e, 400
+
 
 @movie_ns.route('/<int:mid>')
 class OneMovieView(Resource):
